@@ -67,7 +67,11 @@
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
-      <input type="email" name="Email" placeholder="Email" required>
+      <input type="email" name="Email" placeholder="Correo" required>
+      <input type="text" name="RUC" placeholder="RUC" required>
+      <input type="text" name="RazonSocial" placeholder="Nombre de la Razón Social" required>
+      <input type="text" name="EquipoInteres" placeholder="Equipo de interés" required>
+      <input type="text" name="Ubicacion" placeholder="Ubicación" required>
       <button type="submit">Enviar</button>
       <div class="success" id="successMessage"></div>
     </form>
@@ -80,8 +84,23 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
 
-      const data = new FormData(form);
-      const params = new URLSearchParams(data);
+      // Tomamos los datos en el mismo orden de tu Excel
+      const data = {
+        Nombre: form.Nombre.value,
+        Especialidad: form.Especialidad.value,
+        Telefono: form.Telefono.value,
+        Correo: form.Email.value,
+        RUC: form.RUC.value,
+        "Razón Social": form.RazonSocial.value,
+        "Equipo de interés": form.EquipoInteres.value,
+        Ubicación: form.Ubicacion.value
+      };
+
+      // Convertimos a URLSearchParams para enviar al Google Apps Script
+      const params = new URLSearchParams();
+      for (let key in data) {
+        params.append(key, data[key]);
+      }
 
       fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
         method: 'POST',
