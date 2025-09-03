@@ -11,14 +11,14 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPcAAADMCAMAAACY78UPAAABcVBMVEX/...'); /* pega tu base64 completo */
+      background-image: url('data:image/png;base64,iVBORw0K...'); /* tu imagen base64 completa */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
     }
 
     .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255,255,255,0.9);
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -26,38 +26,11 @@
       width: 100%;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    .success {
-      text-align: center;
-      color: green;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    h2 { text-align: center; margin-bottom: 20px; }
+    input, button { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
+    button { background-color: #4CAF50; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background-color: #45a049; }
+    .success { text-align: center; color: green; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -79,21 +52,26 @@
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-
       const data = new FormData(form);
-      const params = new URLSearchParams(data);
 
-      fetch('https://script.google.com/macros/s/AKfycbyTxjyUfXMWLWoipH5b8SAMCuJCfZbdbbs_eKT9KZr3IVn6wolNCo2Q_xc4q99XKDbs/exec', {
-        method: 'POST',
-        body: params
+      const url = "TU_URL_DEL_WEB_APP"; // reemplaza con la URL de tu Apps Script
+
+      fetch(url, {
+        method: "POST",
+        body: new URLSearchParams(data)
       })
-      .then(response => {
-        successMessage.textContent = "¡Registro enviado correctamente!";
-        form.reset();
+      .then(resp => resp.json())
+      .then(res => {
+        if(res.result === "success") {
+          successMessage.textContent = "¡Registro enviado correctamente!";
+          form.reset();
+        } else {
+          successMessage.textContent = "Error al enviar: " + res.message;
+        }
       })
-      .catch(error => {
+      .catch(err => {
         successMessage.textContent = "Error al enviar el registro.";
-        console.error(error);
+        console.error(err);
       });
     });
   </script>
