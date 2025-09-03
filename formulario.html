@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario Doctores</title>
+  <title>Registro de Doctores</title>
   <style>
     body {
       font-family: sans-serif;
@@ -11,14 +11,14 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPcAAADMCAMAAACY78UPAAABcVBMVEX/...'); /* pega tu base64 completo */
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPcAAADMCAMAAACY78UPAAABcVBMVEX/...'); /* reemplaza con tu base64 */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
     }
 
     .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255,255,255,0.9);
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -26,12 +26,9 @@
       width: 100%;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    h2 { text-align: center; margin-bottom: 20px; }
 
-    input, select, button {
+    input, button {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -48,16 +45,9 @@
       font-weight: bold;
     }
 
-    button:hover {
-      background-color: #45a049;
-    }
+    button:hover { background-color: #45a049; }
 
-    .success {
-      text-align: center;
-      color: green;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    .success { text-align: center; color: green; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -67,7 +57,7 @@
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
-      <input type="email" name="Email" placeholder="Correo" required>
+      <input type="email" name="Correo" placeholder="Correo" required>
       <input type="text" name="RUC" placeholder="RUC" required>
       <input type="text" name="RazonSocial" placeholder="Nombre de la Razón Social" required>
       <input type="text" name="EquipoInteres" placeholder="Equipo de interés" required>
@@ -84,25 +74,10 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
 
-      // Tomamos los datos en el mismo orden de tu Excel
-      const data = {
-        Nombre: form.Nombre.value,
-        Especialidad: form.Especialidad.value,
-        Telefono: form.Telefono.value,
-        Correo: form.Email.value,
-        RUC: form.RUC.value,
-        "Razón Social": form.RazonSocial.value,
-        "Equipo de interés": form.EquipoInteres.value,
-        Ubicación: form.Ubicacion.value
-      };
+      const data = new FormData(form);
+      const params = new URLSearchParams(data);
 
-      // Convertimos a URLSearchParams para enviar al Google Apps Script
-      const params = new URLSearchParams();
-      for (let key in data) {
-        params.append(key, data[key]);
-      }
-
-      fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
+      fetch('https://script.google.com/macros/s/TU_SCRIPT_ID/exec', { // reemplaza TU_SCRIPT_ID
         method: 'POST',
         body: params
       })
