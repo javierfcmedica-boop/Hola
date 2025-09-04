@@ -11,12 +11,13 @@
     button { background-color:#4CAF50; color:white; border:none; cursor:pointer; font-weight:bold; }
     button:hover { background-color:#45a049; }
     .success { text-align:center; color:green; font-weight:bold; margin-top:10px; }
+    .error { text-align:center; color:red; font-weight:bold; margin-top:10px; }
   </style>
 </head>
 <body>
   <div class="form-container">
     <h2>Registro de Doctores</h2>
-    <form id="doctorForm" action="https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec" method="POST" target="hidden_iframe">
+    <form id="doctorForm">
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
@@ -27,8 +28,43 @@
       <input type="text" name="Ubicacion" placeholder="Ubicación" required>
       <button type="submit">Enviar</button>
       <div class="success" id="successMessage"></div>
+      <div class="error" id="errorMessage"></div>
     </form>
-    <iframe name="hidden_iframe" style="display:none;" onload="document.getElementById('successMessage').textContent='¡Registro enviado correctamente!'; document.getElementById('doctorForm').reset();"></iframe>
   </div>
+
+  <script>
+    const form = document.getElementById('doctorForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      successMessage.textContent = "";
+      errorMessage.textContent = "";
+
+      // Convertimos el formulario a JSON
+      const data = {};
+      new FormData(form).forEach((value, key) => data[key] = value);
+
+      fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(result => {
+        if(result.result === "success") {
+          successMessage.textContent = "¡Registro enviado correctamente!";
+          form.reset();
+        } else {
+          errorMessage.textContent = "Error al enviar el registro: " + (result.message || "");
+        }
+      })
+      .catch(err => {
+        errorMessage.textContent = "Error al enviar el registro.";
+        console.error(err);
+      });
+    });
+  </script>
 </body>
 </html>
