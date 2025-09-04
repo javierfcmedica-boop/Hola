@@ -17,13 +17,45 @@
   <div class="form-container">
     <h2>Registro de Doctores</h2>
     <form id="doctorForm">
-      <input type="text" name="Nombre" placeholder="Nombre completo" required>
-      <input type="text" name="Especialidad" placeholder="Especialidad" required>
-      <input type="tel" name="Telefono" placeholder="Teléfono" required>
-      <input type="email" name="Correo" placeholder="Correo" required>
-      <input type="text" name="RUC" placeholder="RUC" required>
-      <input type="text" name="RazonSocial" placeholder="Razón Social" required>
-      <input type="text" name="EquipoInteres" placeholder="Equipo de interés" required>
-      <input type="text" name="Ubicacion" placeholder="Ubicación" required>
+      <input type="text" name="nombre" placeholder="Nombre completo" required>
+      <input type="text" name="especialidad" placeholder="Especialidad" required>
+      <input type="tel" name="telefono" placeholder="Teléfono" required>
+      <input type="email" name="correo" placeholder="Correo" required>
+      <input type="text" name="ruc" placeholder="RUC" required>
+      <input type="text" name="razonsocial" placeholder="Razón Social" required>
+      <input type="text" name="equipointeres" placeholder="Equipo de interés" required>
+      <input type="text" name="ubicacion" placeholder="Ubicación" required>
       <button type="submit">Enviar</button>
-      <div class="succ
+      <div class="success" id="successMessage"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('doctorForm');
+    const successMessage = document.getElementById('successMessage');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(result => {
+        if(result.result === "success") {
+          successMessage.textContent = "¡Registro enviado correctamente!";
+          form.reset();
+        } else {
+          successMessage.textContent = "Error al enviar el registro.";
+        }
+      })
+      .catch(err => {
+        successMessage.textContent = "Error al enviar el registro.";
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
