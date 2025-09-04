@@ -11,6 +11,7 @@
     button { background-color:#4CAF50; color:white; border:none; cursor:pointer; font-weight:bold; }
     button:hover { background-color:#45a049; }
     .success { text-align:center; color:green; font-weight:bold; margin-top:10px; }
+    .error { text-align:center; color:red; font-weight:bold; margin-top:10px; }
   </style>
 </head>
 <body>
@@ -27,19 +28,24 @@
       <input type="text" name="Ubicacion" placeholder="Ubicación" required>
       <button type="submit">Enviar</button>
       <div class="success" id="successMessage"></div>
+      <div class="error" id="errorMessage"></div>
     </form>
   </div>
 
   <script>
     const form = document.getElementById('doctorForm');
     const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
+      successMessage.textContent = "";
+      errorMessage.textContent = "";
+
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      fetch('https://script.google.com/macros/s/TU_SCRIPT_ID/exec', {
+      fetch('https://script.google.com/macros/library/d/1pYzDsDKGepIKrx4sqO2DZcwkI1IdiXopq_3TwNp_lR7p-6a5VFv2aroo/3', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -50,12 +56,12 @@
           successMessage.textContent = "¡Registro enviado correctamente!";
           form.reset();
         } else {
-          successMessage.textContent = "Error al enviar el registro.";
+          errorMessage.textContent = "Error al enviar el registro: " + (result.message || "");
           console.error(result.message);
         }
       })
       .catch(err => {
-        successMessage.textContent = "Error al enviar el registro.";
+        errorMessage.textContent = "Error al enviar el registro.";
         console.error(err);
       });
     });
