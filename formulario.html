@@ -17,7 +17,7 @@
 <body>
   <div class="form-container">
     <h2>Registro de Doctores</h2>
-    <form id="doctorForm">
+    <form id="doctorForm" action="https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec" method="POST" target="hidden_iframe">
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
@@ -30,6 +30,7 @@
       <div class="success" id="successMessage"></div>
       <div class="error" id="errorMessage"></div>
     </form>
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
   </div>
 
   <script>
@@ -38,29 +39,9 @@
     const errorMessage = document.getElementById('errorMessage');
 
     form.addEventListener('submit', e => {
-      e.preventDefault();
-      successMessage.textContent = "";
+      successMessage.textContent = "¡Registro enviado correctamente!";
       errorMessage.textContent = "";
-
-      const formData = new FormData(form);
-
-      fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.json())
-      .then(result => {
-        if(result.result === "success") {
-          successMessage.textContent = "¡Registro enviado correctamente!";
-          form.reset();
-        } else {
-          errorMessage.textContent = "Error al enviar el registro: " + (result.message || "");
-        }
-      })
-      .catch(err => {
-        errorMessage.textContent = "Error al enviar el registro.";
-        console.error(err);
-      });
+      setTimeout(() => form.reset(), 500); // limpiar formulario después de enviar
     });
   </script>
 </body>
