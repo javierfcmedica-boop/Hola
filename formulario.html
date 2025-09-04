@@ -21,7 +21,7 @@
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
-      <input type="email" name="Correo" placeholder="Correo" required>
+      <input type="email" id="Correo" name="Correo" placeholder="Correo" required>
       <input type="text" name="RUC" placeholder="RUC" required>
       <input type="text" name="RazonSocial" placeholder="Razón Social" required>
       <input type="text" name="EquipoInteres" placeholder="Equipo de interés" required>
@@ -39,9 +39,30 @@
     const errorMessage = document.getElementById('errorMessage');
 
     form.addEventListener('submit', e => {
-      successMessage.textContent = "¡Registro enviado correctamente!";
+      e.preventDefault();
+      successMessage.textContent = "";
       errorMessage.textContent = "";
-      setTimeout(() => form.reset(), 500); // limpiar formulario después de enviar
+
+      // Extraer correo explícitamente
+      const correo = document.getElementById('Correo').value;
+
+      const formData = new FormData(form);
+      formData.set("Correo", correo); // fuerza que correo se envíe
+
+      fetch(form.action, { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(result => {
+          if(result.result === "success") {
+            successMessage.textContent = "¡Registro enviado correctamente!";
+            form.reset();
+          } else {
+            errorMessage.textContent = "Error al enviar el registro: " + (result.message || "");
+          }
+        })
+        .catch(err => {
+          errorMessage.textContent = "Error al enviar el registro.";
+          console.error(err);
+        });
     });
   </script>
 </body>
