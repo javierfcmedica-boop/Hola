@@ -2,16 +2,53 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Doctores</title>
+  <title>Formulario Doctores</title>
   <style>
-    body { font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; background:#f4f4f4; }
-    .form-container { background-color:#fff; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.3); max-width:400px; width:100%; }
-    h2 { text-align:center; margin-bottom:20px; }
-    input, button { width:100%; padding:10px; margin-bottom:15px; border-radius:5px; border:1px solid #ccc; font-size:16px; }
-    button { background-color:#4CAF50; color:white; border:none; cursor:pointer; font-weight:bold; }
-    button:hover { background-color:#45a049; }
-    .success { text-align:center; color:green; font-weight:bold; margin-top:10px; }
-    .error { text-align:center; color:red; font-weight:bold; margin-top:10px; }
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f2f2f2;
+    }
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .success {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -21,45 +58,37 @@
       <input type="text" name="Nombre" placeholder="Nombre completo" required>
       <input type="text" name="Especialidad" placeholder="Especialidad" required>
       <input type="tel" name="Telefono" placeholder="Teléfono" required>
-      <input type="email" name="Correo" placeholder="Correo" required>
-      <input type="text" name="RUC" placeholder="RUC" required>
-      <input type="text" name="RazonSocial" placeholder="Razón Social" required>
-      <input type="text" name="EquipoInteres" placeholder="Equipo de interés" required>
-      <input type="text" name="Ubicacion" placeholder="Ubicación" required>
+      <input type="email" name="Email" placeholder="Email" required>
       <button type="submit">Enviar</button>
       <div class="success" id="successMessage"></div>
-      <div class="error" id="errorMessage"></div>
     </form>
   </div>
 
   <script>
     const form = document.getElementById('doctorForm');
     const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      successMessage.textContent = "";
-      errorMessage.textContent = "";
-
-      const formData = new FormData(form);
+      const data = new FormData(form);
+      const params = new URLSearchParams(data);
 
       fetch('https://script.google.com/macros/s/AKfycbzQVJ3K-pkB0rHQv6RTMVTUrkleIXUCY0f7q0c8ADuHRuigNIUDHSOPUPXelNfOpd9T/exec', {
         method: 'POST',
-        body: formData
+        body: params
       })
-      .then(res => res.json())
+      .then(response => response.json())
       .then(result => {
-        if(result.result === "success") {
+        if (result.result === "success") {
           successMessage.textContent = "¡Registro enviado correctamente!";
           form.reset();
         } else {
-          errorMessage.textContent = "Error al enviar el registro: " + (result.message || "");
+          successMessage.textContent = "Error al enviar el registro.";
         }
       })
-      .catch(err => {
-        errorMessage.textContent = "Error al enviar el registro.";
-        console.error(err);
+      .catch(error => {
+        successMessage.textContent = "Error al enviar el registro.";
+        console.error(error);
       });
     });
   </script>
